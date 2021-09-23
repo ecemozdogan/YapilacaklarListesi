@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <title>Yapılacaklar Listesi</title>
+</head>
+
+<style>
+    @font-face { font-family: Gravity; src: url('/static/GravityFont.otf'); }
+    .table {
+    border-bottom:0px !important;
+    }
+    .table th, .table td {
+        border: 1px !important;
+    }
+    .fixed-table-container {
+        border:0px !important;
+    }
+</style>
+
+<body style="font-family: Gravity; background-image: linear-gradient(to bottom right, #46defa, #4daff9); background-attachment:fixed; height:100%; ">
+
+    <div style="background-color: white; margin: 50px; border-radius: 16px; overflow: hidden; box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px">
+        
+        <section id="baslik" style="margin-bottom: 25px; margin-top: 10px; ">
+                <div class="container" style="padding: 10px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 style="text-align: center;"><strong>Yapılacaklar Listesi</strong></h3>
+                        </div>
+                    </div>
+            </div>
+        </section>
+
+
+        <section id="ekle" style="margin-bottom: 10px;">
+            <form action="/ekle" method="POST">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group mb-3">
+                                    <input type="text" name="yeni_yapilacak" class="form-control" placeholder="Yeni Yapılacak Ekle" aria-label="Yeni Yapılacak Ekle" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i></button>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+
+        <section id="liste">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <nav>
+                            <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-yapilacaklar" role="tab" aria-controls="nav-yapilacaklar" aria-selected="true">Yapılacaklar</a>
+                                <a class="nav-item nav-link " id="nav-profile-tab" data-toggle="tab" href="#nav-tamamlananlar" role="tab" aria-controls="nav-tamamlananlar" aria-selected="false">Tamamlananlar</a>
+                            </div>
+                        </nav>
+                            <div class="tab-content" id="nav-tabContent" style="margin-top: 10px; ">
+                            <div class="tab-pane fade show active" id="nav-yapilacaklar" role="tabpanel" aria-labelledby="nav-yapilacaklar-tab">
+                                <table class="table table-hover">
+                                    <!-- Yapılacaklar buraya gelecek -->
+                                    {% for item in yapilacaklar_listesi %}
+                                    <tr>
+                                        <td>{{item.yapilacak}}</td>
+                                        <td align="right">
+                                        <form action="/tamamla/{{item.id}}" method="POST" style="display: inline;">
+                                            <button type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
+                                        </form>
+                                        <form action="/yapilacakSil/{{item.id}}" method="POST" style="display: inline;">
+                                            <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                        </form>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    <!-- Yapılacaklar buraya gelecek -->
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="nav-tamamlananlar" role="tabpanel" aria-labelledby="nav-tamamlananlar-tab">
+                                <table class="table  table-hover" cellspacing="0">
+                                    <!--Tamamlananlar buraya gelecek-->
+                                    {% for item in tamamlananlar_listesi %}
+                                    <tr>
+                                        <td>{{item.tamamlanan}}</td>
+                                        <td align="right">
+                                            <form action="/tamamlanmamisIsaretle/{{item.id}}" method="POST" style="display: inline;">
+                                                <button type="submit" class="btn btn-secondary"><i class="fas fa-times"></i></button>
+                                            </form>
+                                            <form action="/tamamlanmisSil/{{item.id}}" method="POST" style="display: inline;">
+                                                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    <!--Tamamlananlar buraya gelecek-->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
